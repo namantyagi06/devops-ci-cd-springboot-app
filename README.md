@@ -1,3 +1,4 @@
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/38eec8df-12b0-4c09-be0a-d8d7a7793df6" />
 # Spring Boot based Java web application
  
 This is a simple Sprint Boot based Java application that can be built using Maven. Sprint Boot dependencies are handled using the pom.xml 
