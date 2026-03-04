@@ -1,73 +1,207 @@
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/38eec8df-12b0-4c09-be0a-d8d7a7793df6" />
-# Spring Boot based Java web application
- 
-This is a simple Sprint Boot based Java application that can be built using Maven. Sprint Boot dependencies are handled using the pom.xml 
-at the root directory of the repository.
 
-This is a MVC architecture based application where controller returns a page with title and message attributes to the view.
+# 🚀 End-to-End DevOps CI/CD Pipeline with Jenkins, SonarQube, Docker, ArgoCD & Kubernetes
 
-## Execute the application locally and access it using your browser
+This project demonstrates a **complete GitOps-based CI/CD pipeline** for a Spring Boot application using modern DevOps tools. The pipeline automatically builds, tests, analyzes, containerizes, and deploys the application to a Kubernetes cluster.
 
-Checkout the repo and move to the directory
+---
+
+# 📌 Project Architecture
+
+The CI/CD pipeline follows this workflow:
+
+Developer → GitHub → Jenkins → Maven Build → SonarQube Analysis → Docker Build → DockerHub → Update Kubernetes Manifest → ArgoCD → Kubernetes Deployment
+
+---
+
+# 🛠️ Tools & Technologies Used
+
+| Tool       | Purpose                                  |
+| ---------- | ---------------------------------------- |
+| GitHub     | Source code repository                   |
+| Jenkins    | CI/CD pipeline automation                |
+| Maven      | Build automation & dependency management |
+| SonarQube  | Static code analysis & quality checks    |
+| Docker     | Containerization                         |
+| DockerHub  | Container image registry                 |
+| ArgoCD     | GitOps continuous deployment             |
+| Kubernetes | Container orchestration platform         |
+
+---
+
+# ⚙️ CI/CD Pipeline Flow
+
+## 1️⃣ Code Commit
+
+Developers push the application code to the GitHub repository.
 
 ```
-git clone https://github.com/iam-veeramalla/Jenkins-Zero-To-Hero/java-maven-sonar-argocd-helm-k8s/sprint-boot-app
-cd java-maven-sonar-argocd-helm-k8s/sprint-boot-app
+git push origin main
 ```
 
-Execute the Maven targets to generate the artifacts
+---
+
+## 2️⃣ Jenkins Pipeline Trigger
+
+Jenkins automatically triggers the pipeline and reads the **Jenkinsfile** from the repository.
+
+---
+
+## 3️⃣ Build & Test (Maven)
+
+Maven builds the Spring Boot application and generates the executable JAR.
+
+Steps performed:
+
+* Compile the source code
+* Run unit tests
+* Package the application
+
+Command executed:
 
 ```
 mvn clean package
 ```
 
-The above maven target stroes the artifacts to the `target` directory. You can either execute the artifact on your local machine
-(or) run it as a Docker container.
-
-** Note: To avoid issues with local setup, Java versions and other dependencies, I would recommend the docker way. **
-
-
-### Execute locally (Java 11 needed) and access the application on http://localhost:8080
+Output:
 
 ```
-java -jar target/spring-boot-web.jar
+target/spring-boot-demo.jar
 ```
 
-### The Docker way
+---
 
-Build the Docker Image
+## 4️⃣ Static Code Analysis (SonarQube)
 
-```
-docker build -t ultimate-cicd-pipeline:v1 .
-```
+SonarQube performs static code analysis to detect:
 
-```
-docker run -d -p 8010:8080 -t ultimate-cicd-pipeline:v1
-```
+* Bugs
+* Vulnerabilities
+* Code smells
+* Code coverage
 
-Hurray !! Access the application on `http://<ip-address>:8010`
-
-
-## Next Steps
-
-### Configure a Sonar Server locally
+Command executed:
 
 ```
-System Requirements
-Java 17+ (Oracle JDK, OpenJDK, or AdoptOpenJDK)
-Hardware Recommendations:
-   Minimum 2 GB RAM
-   2 CPU cores
-sudo apt update && sudo apt install unzip -y
-adduser sonarqube
-wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-10.4.1.88267.zip
-unzip *
-chown -R sonarqube:sonarqube /opt/sonarqube
-chmod -R 775 /opt/sonarqube
-cd /opt/sonarqube/bin/linux-x86-64
-./sonar.sh start
+mvn sonar:sonar
 ```
 
-Hurray !! Now you can access the `SonarQube Server` on `http://<ip-address>:9000` 
+---
 
+## 5️⃣ Docker Image Build
 
+The application is containerized using Docker.
+
+```
+docker build -t <dockerhub-username>/ultimate-cicd:${BUILD_NUMBER} .
+```
+
+Example image:
+
+```
+namantyagi06/ultimate-cicd:15
+```
+
+---
+
+## 6️⃣ Push Image to DockerHub
+
+The built Docker image is pushed to DockerHub.
+
+```
+docker push namantyagi06/ultimate-cicd:${BUILD_NUMBER}
+```
+
+---
+
+## 7️⃣ Update Kubernetes Deployment Manifest
+
+Jenkins automatically updates the Kubernetes deployment YAML file with the new image tag.
+
+Example:
+
+```
+image: namantyagi06/ultimate-cicd:15
+```
+
+The updated manifest is then committed and pushed back to GitHub.
+
+---
+
+## 8️⃣ GitOps Deployment with ArgoCD
+
+ArgoCD continuously monitors the Git repository for changes.
+
+Once a change is detected:
+
+* ArgoCD syncs the manifests
+* The application is automatically deployed to Kubernetes
+
+---
+
+## 9️⃣ Application Deployment on Kubernetes
+
+Kubernetes creates and manages:
+
+* Deployments
+* Pods
+* Services
+
+The application becomes accessible after successful deployment.
+
+---
+
+# 📊 CI/CD Pipeline Diagram
+
+Refer to the architecture diagram below:
+
+![CI/CD Pipeline](cicd-architecture.png)
+
+---
+
+# 📂 Project Structure
+
+```
+Jenkins-Zero-To-Hero
+│
+├── java-maven-sonar-argocd-helm-k8s
+│
+├── spring-boot-app
+│   ├── src
+│   ├── Dockerfile
+│   ├── Jenkinsfile
+│   └── pom.xml
+│
+├── spring-boot-app-manifests
+│   └── deployment.yml
+```
+
+---
+
+# 🚀 Key Features
+
+✔ Automated CI/CD pipeline
+✔ Static code quality analysis
+✔ Docker containerization
+✔ GitOps deployment using ArgoCD
+✔ Kubernetes automated deployment
+
+---
+
+# 📌 Future Improvements
+
+* Add **Trivy container security scanning**
+* Implement **SonarQube Quality Gate**
+* Add **Helm for Kubernetes package management**
+* Implement **Monitoring using Prometheus & Grafana**
+
+---
+
+# 👨‍💻 Author
+
+**Naman Tyagi**
+
+DevOps & Cloud Enthusiast
+
+GitHub:
+https://github.com/namantyagi06
